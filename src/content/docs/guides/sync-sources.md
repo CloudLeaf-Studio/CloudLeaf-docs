@@ -106,3 +106,7 @@ About priority:
 * When uploading, CloudLeaf pushes bookmark data to all enabled sync sources
 
 :::
+
+:::caution
+Automatic sync uses the highest-priority sync source for status checks and downloads. If you change the highest-priority source, manually click `Upload Bookmarks` once to establish a baseline for the new target.
+:::

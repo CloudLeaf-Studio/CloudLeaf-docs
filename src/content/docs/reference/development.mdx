@@ -17,6 +17,7 @@ import Authors from '../../../components/Authors.astro';
 | Language | TypeScript |
 | State Management | Zustand + Immer |
 | Persistence | @plasmohq/storage |
+| Messaging / Concurrency | @plasmohq/messaging + async-mutex |
 
 ### Local Setup
 
@@ -53,6 +54,7 @@ npm run package:firefox  # Firefox
     - zh_CN/                   Chinese translations
 - scripts/                     Build helper scripts
 - src
+  - background/                Service worker, event listeners & sync scheduler
   - components/                UI components
   - constants/                 Constants
   - core
@@ -60,6 +62,7 @@ npm run package:firefox  # Firefox
     - sync
       - cloud/                 Cloud sync orchestration
       - local/                 Local file sync orchestration
+      - coordinator.ts         Automatic sync reconciliation
       - utils/                 Sync comparison utilities
   - hooks/                     React Hooks
   - i18n/                      Internationalization
@@ -98,10 +101,19 @@ npm run package:firefox  # Firefox
 ```text
 Popup / Side Panel / Settings (UI)
   └── hooks/                   State & side-effect encapsulation
-      └── core/sync/           Sync orchestration (cloud / local)
-          └── providers/       Storage backends (Gist / WebDAV / Local)
-              └── BaseProvider  → HttpProvider  → Concrete implementations
+      └── background/          Messages, bookmark events & scheduler
+          └── core/sync/       Sync reconciliation (cloud / local)
+              └── providers/   Storage backends (Gist / WebDAV / Local)
+                  └── BaseProvider → HttpProvider → Concrete implementations
 ```
+
+### Automatic Sync Flow
+
+The background service worker listens for bookmark changes and schedules a debounced sync about 5 seconds after changes settle. A browser alarm performs another check every 15 minutes, while the settings page can request an immediate `Trigger Sync` message.
+
+The coordinator serializes sync cycles with a mutex, compares normalized bookmark hashes and timestamps, then uploads local data or applies cloud data as appropriate. Applying cloud data is guarded so the resulting bookmark events do not start a feedback loop.
+
+Automatic sync starts in the `uninitialized` phase. A successful manual `Upload Bookmarks` establishes the target baseline and changes the phase to `ready`; conflicts change it to `conflict` and require manual resolution before automatic sync resumes.
 
 ## Contributing
 
