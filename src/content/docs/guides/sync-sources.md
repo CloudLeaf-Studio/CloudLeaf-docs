@@ -108,5 +108,5 @@ About priority:
 :::
 
 :::caution
-Automatic sync uses the highest-priority sync source for status checks and downloads. If you change the highest-priority source, manually click `Upload Bookmarks` once to establish a baseline for the new target.
+Automatic sync uses the highest-priority sync source for status checks and downloads. If you change the highest-priority source, manually upload or download once to establish a sync baseline for the new target.
 :::

@@ -62,8 +62,8 @@ npm run package:firefox  # Firefox
     - sync
       - cloud/                 Cloud sync orchestration
       - local/                 Local file sync orchestration
-      - coordinator.ts         Automatic sync reconciliation
       - utils/                 Sync comparison utilities
+      - coordinator.ts         Automatic sync reconciliation
   - hooks/                     React Hooks
   - i18n/                      Internationalization
   - options/                   Settings page entry
@@ -113,7 +113,7 @@ The background service worker listens for bookmark changes and schedules a debou
 
 The coordinator serializes sync cycles with a mutex, compares normalized bookmark hashes and timestamps, then uploads local data or applies cloud data as appropriate. Applying cloud data is guarded so the resulting bookmark events do not start a feedback loop.
 
-Automatic sync starts in the `uninitialized` phase. A successful manual `Upload Bookmarks` establishes the target baseline and changes the phase to `ready`; conflicts change it to `conflict` and require manual resolution before automatic sync resumes.
+Automatic sync starts in the `uninitialized` phase. A successful manual `Upload Bookmarks` or `Download Bookmarks` records the current sync result and changes the phase to `ready`; conflicts change it to `conflict` and require manual resolution before automatic sync resumes.
 
 ## Contributing
 
