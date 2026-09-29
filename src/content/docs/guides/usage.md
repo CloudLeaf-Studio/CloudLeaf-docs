@@ -50,6 +50,21 @@ Restore bookmarks from a local JSON file (Chrome and Edge only).
 2. Select a previously exported JSON file
 3. If local data is newer than the file, a confirmation dialog will appear
 
+## Automatic Sync
+
+Automatic sync is initialized only after a successful manual upload or download. Configure a sync source and complete either action before enabling automatic sync.
+
+1. Open the popup and complete a manual `Upload Bookmarks` or `Download Bookmarks` action
+2. Open Settings and turn on `Auto Sync`
+3. CloudLeaf schedules a sync about 5 seconds after bookmark changes settle
+4. A background alarm also checks for changes every 15 minutes
+
+You can use `Trigger Sync` in the settings page to start a check immediately. The status indicator shows whether sync is `Uninitialized`, `Ready`, or in `Conflict`. If the cloud target or its highest-priority source changes, manually upload or download again to establish a new sync baseline.
+
+:::caution
+Automatic sync does not start until the first manual `Upload Bookmarks` or `Download Bookmarks` succeeds. When a conflict is detected, automatic sync pauses; resolve it manually by choosing an upload or download action.
+:::
+
 ## Preview Mode
 
 View your cloud bookmarks at any time without performing an upload or download.
@@ -66,8 +81,9 @@ Preview mode is not only for checking content before syncing — you can also op
 
 ## Conflict Detection
 
-CloudLeaf compares the **local bookmark timestamp** with the **cloud file timestamp** to determine which is newer:
+CloudLeaf compares normalized bookmark content first, then uses the **local bookmark timestamp** and **cloud file timestamp** when the content differs:
 
+- **In sync**: both normalized content hashes match
 - **Local is newer**: when downloading if local is newer → prompts whether to force download
 - **Cloud is newer**: when uploading if cloud is newer → prompts whether to force overwrite
-- **In sync**: otherwise, both sides match, proceed directly
+- **Conflict**: content differs but both timestamps are equal; resolve manually before automatic sync can continue

@@ -17,6 +17,7 @@ import Authors from '../../../../components/Authors.astro';
 | 语言 | TypeScript |
 | 状态管理 | Zustand + Immer |
 | 持久化 | @plasmohq/storage |
+| 消息与并发 | @plasmohq/messaging + async-mutex |
 
 ### 本地搭建
 
@@ -53,6 +54,7 @@ npm run package:firefox  # Firefox
     - zh_CN/                   中文翻译
 - scripts/                     构建辅助脚本
 - src
+  - background/                Service Worker、事件监听与同步调度
   - components/                UI 组件
   - constants/                 常量定义
   - core
@@ -61,6 +63,7 @@ npm run package:firefox  # Firefox
       - cloud/                 云端同步编排
       - local/                 本地文件同步编排
       - utils/                 同步状态对比工具
+      - coordinator.ts         自动同步协调器
   - hooks/                     React Hooks
   - i18n/                      国际化封装
   - options/                   设置页入口
@@ -98,10 +101,19 @@ npm run package:firefox  # Firefox
 ```text
 弹窗 / 侧边栏 / 设置页（UI）
   └── hooks/                   状态与副作用封装
-      └── core/sync/           同步编排（cloud / local）
-          └── providers/       存储后端（Gist / WebDAV / Local）
-              └── BaseProvider  → HttpProvider  → 具体实现
+      └── background/          消息、书签事件与同步调度
+          └── core/sync/       同步协调（cloud / local）
+              └── providers/   存储后端（Gist / WebDAV / Local）
+                  └── BaseProvider → HttpProvider → 具体实现
 ```
+
+### 自动同步流程
+
+后台 Service Worker 会监听书签变更，在变更稳定约 5 秒后安排一次防抖同步。浏览器 Alarm 每 15 分钟再次检查，设置页也可以通过`手动同步`消息立即发起检查。
+
+同步协调器使用互斥锁串行执行同步周期，比较规范化后的书签哈希和时间戳，再决定上传本地数据或应用云端数据。应用云端数据期间会抑制由此产生的书签事件，避免形成反馈循环。
+
+自动同步从`未初始化`阶段开始。首次手动`上传书签`或`下载书签`成功后会记录当前同步结果并进入`就绪`阶段；检测到冲突时进入`冲突`阶段，必须手动解决后才能继续自动同步。
 
 ## 贡献指南
 
