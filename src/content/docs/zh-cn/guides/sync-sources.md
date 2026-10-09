@@ -17,6 +17,8 @@ CloudLeaf 支持两种云端存储方式，[GitHub Gist](#github-gist) 和 [WebD
 
 将书签存入 GitHub 的私有 Gist。
 
+CloudLeaf 支持配置多个 Gist 同步源。为每个同步源重复 Gist 配置，并可为每个 Gist 设置不同的 Gist ID 和存储文件名。
+
 ### 获取 Token
 
 1. 登录 GitHub，打开 [Personal Access Tokens](https://github.com/settings/tokens)
@@ -89,7 +91,7 @@ CloudLeaf 支持同时配置多个同步源，可以在`已启用的同步源`�
 
 * **调整优先级**
 
-  使用上下箭头按钮，位置越高优先级越高。
+  Gist 和 WebDAV 同步源共用一个优先级顺序。使用上下箭头调整顺序；`priority` 数值越小，优先级越高，因此列表位置越靠上的同步源会优先使用。
 
 * **下拉菜单**
 

@@ -17,6 +17,9 @@ Click `Add Sync Source` and choose your storage method.
 
 Store bookmarks in a private GitHub Gist.
 
+You can configure multiple Gist sync sources. Repeat the Gist setup for each
+source, and give each one its own Gist ID and storage filename.
+
 ### Get a Token
 
 1. Sign in to GitHub and go to [Personal Access Tokens](https://github.com/settings/tokens)
@@ -89,7 +92,9 @@ CloudLeaf supports multiple sync sources at once. Manage them in the `Enabled Sy
 
 * **Adjust Priority**
 
-  Use the up/down arrow buttons — higher position means higher priority.
+  Gist and WebDAV sources share one priority order. Use the up/down arrow
+  buttons to reorder them; a smaller `priority` value means higher priority,
+  so sources higher in the list are used first.
 
 * **Dropdown Menu**
 

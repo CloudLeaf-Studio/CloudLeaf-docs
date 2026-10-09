@@ -52,17 +52,17 @@ Restore bookmarks from a local JSON file (Chrome and Edge only).
 
 ## Automatic Sync
 
-Automatic sync is initialized only after a successful manual upload or download. Configure a sync source and complete either action before enabling automatic sync.
+Automatic sync starts only after you configure a sync source and successfully complete a manual upload. Complete this upload before enabling automatic sync.
 
-1. Open the popup and complete a manual `Upload Bookmarks` or `Download Bookmarks` action
+1. Open the popup and successfully complete a manual `Upload Bookmarks` action
 2. Open Settings and turn on `Auto Sync`
 3. CloudLeaf schedules a sync about 5 seconds after bookmark changes settle
 4. A background alarm also checks for changes every 15 minutes
 
-You can use `Trigger Sync` in the settings page to start a check immediately. The status indicator shows whether sync is `Uninitialized`, `Ready`, or in `Conflict`. If the cloud target or its highest-priority source changes, manually upload or download again to establish a new sync baseline.
+You can use `Trigger Sync` in the settings page to start a check immediately. The status indicator shows whether sync is `Uninitialized`, `Ready`, or in `Conflict`. If the cloud target or its highest-priority source changes, manually upload again before automatic sync uses the new target.
 
 :::caution
-Automatic sync does not start until the first manual `Upload Bookmarks` or `Download Bookmarks` succeeds. When a conflict is detected, automatic sync pauses; resolve it manually by choosing an upload or download action.
+Automatic sync does not start until the first manual `Upload Bookmarks` succeeds. When a conflict is detected, automatic sync pauses; resolve it manually by choosing an upload or download action.
 :::
 
 ## Preview Mode
